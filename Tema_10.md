@@ -1,4 +1,4 @@
-# Тема 10. Концепции и принципы ООП 
+# Тема 10. Декораторы и исключения
 Отчет по Теме #10 выполнил:
 - Сартаков Василий Александрович
 - ИВТ-22-2
@@ -142,372 +142,139 @@ if __name__=='__main__':
 ### Результат.
 ![результат](./pic/L5.png)
 
-## Самостоятельная работа
-### Задания для самостоятельного выполнения:
-Задание Садовник и помидоры.
-Классовая структура:
-Есть Помидор со следующими характеристиками:
-•	Индекс
-•	Стадия созревания (стадии: отсутствует, цветение, зеленый, красный)
-Помидор может:
-•	Расти (переходить на следующую стадию созревания)
-•	Предоставлять информацию о своей зрелости
-
-Есть Куст с помидорами, который:
-•	Содержит список томатов, которые на нем растут А также может:
-•	Расти вместе с томатами
-•	Предоставлять информацию о зрелости всех томатов
-•	Предоставлять урожай
-И также есть Садовник, который имеет:
-•	Имя
-•	Растение, за которым он ухаживает Он может:
-•	Ухаживать за растением
-•	Собирать с него урожай
-
 ## Самостоятельная работа №1
-### Вызовите справку по садоводству
+### Вовочка решил заняться спортивным программированием на python, но для этого он должен знать за какое время выполняется его программа. Он решил, что для этого ему идеально подойдет декоратор для функции, который будет выяснять за какое время выполняется та или иная функция. Помогите Вовочке в его начинаниях и напишите такой декоратор
 
 ```python
-class Tomato:
-    
-    states = {'Отсутствует': 0, 'Цветение': 1, 'Зеленый': 2, 'Красный': 3}
-    
-    def __init__(self, index):
-        self._index = index
-        self._state = self.states['Отсутствует']
-        
-    def grow(self):
-        if self._state < 3:
-            self._state += 1
-        
-    def is_ripe(self):
-        return True if self._state == 3 else False
- 
-class TomatoBush:
-    
-    def __init__(self, num):
-        self.tomatoes = [Tomato(index) for index in range(1, num+1)]
-        
-    def grow_all(self):
-        for tomato in self.tomatoes:
-            tomato.grow()
-            
-    def all_are_ripe(self):
-        return all([tomato.is_ripe() for tomato in self.tomatoes])
-    
-    def give_away_all(self):
-        self.tomatoes = []
- 
-class Gardener:
-    
-    def __init__(self, name, plant):
-        self.name = name
-        self._plant = plant
-        
-    def work(self):
-        self._plant.grow_all()
-        
-    def harvest(self):
-        if self._plant.all_are_ripe():
-            print('Урожай собран!')
-            self._plant.give_away_all()
-        else:
-            print('Томаты еще не дозрели')
-            
-    @staticmethod
-    def knowledge_base():
-        print('Справка по садоводству:')
-        print('1. Не забывайте регулярно поливать и подкармливать растения')
-        print('2. Определите правильное расстояние между растениями, чтобы они не мешали друг другу в росте')
-        print('3. Удалите поврежденные листья и плоды, чтобы предотвратить распространение болезней')
- 
-Gardener.knowledge_base()
+import time
+
+def time_decorator(func):
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print(f"Время выполнения функции '{func.__name__}': {end_time - start_time} секунд")
+        return result
+    return wrapper
+
+@time_decorator
+def fibonacci():
+    fib1 = fib2 = 1
+    for i in range(2, 200):
+        fib1, fib2 = fib2, fib1 + fib2
+        print(fib2, end=' ')
+
+if __name__ == '__main__':
+    fibonacci()
 ```
 
 ### Результат.
 ![](./pic/S1.png)
 
 ## Выводы
-1. В Python для создания статических классов используется команда ```@staticmethod```
+1. В Python существует функция создания декораторов, для добавления функциям новых свойств без изменения их кода
 
 ## Самостоятельная работа №2
-### Создайте объекты классов TomatoBush и Gardener
+### Посмотрев на Вовочку, вы также загорелись идеей спортивного программирования, начав тренировки вы узнали, что для решения некоторых задач необходимо считывать данные из файлов. Но через некоторое время вы столкнулись с проблемой что файлы бывают пустыми, и вы не получаете вводные данные для решения задачи. После этого вы решили не просто считывать данные из файла, а всю конструкцию оборачивать в исключения, чтобы избежать такой проблемы. Создайте пустой файл и файл, в котором есть какая-то информация. Напишите код программы. Если файл пустой, то, нужно вызвать исключение (“бросить исключение”) и вывести в консоль “файл пустой”, а если он не пустой, то вывести информацию из файла.
 
 ```python
-class Tomato:
-    
-    states = {'Отсутствует': 0, 'Цветение': 1, 'Зеленый': 2, 'Красный': 3}
-    
-    def __init__(self, index):
-        self._index = index
-        self._state = self.states['Отсутствует']
-        
-    def grow(self):
-        if self._state < 3:
-            self._state += 1
-        
-    def is_ripe(self):
-        return True if self._state == 3 else False
- 
-class TomatoBush:
-    
-    def __init__(self, num):
-        self.tomatoes = [Tomato(index) for index in range(1, num+1)]
-        
-    def grow_all(self):
-        for tomato in self.tomatoes:
-            tomato.grow()
-            
-    def all_are_ripe(self):
-        return all([tomato.is_ripe() for tomato in self.tomatoes])
-    
-    def give_away_all(self):
-        self.tomatoes = []
- 
-class Gardener:
-    
-    def __init__(self, name, plant):
-        self.name = name
-        self._plant = plant
-        
-    def work(self):
-        self._plant.grow_all()
-        
-    def harvest(self):
-        if self._plant.all_are_ripe():
-            print('Урожай собран!')
-            self._plant.give_away_all()
-        else:
-            print('Томаты еще не дозрели')
-            
-    @staticmethod
-    def knowledge_base():
-        print('Справка по садоводству:')
-        print('1. Не забывайте регулярно поливать и подкармливать растения')
-        print('2. Определите правильное расстояние между растениями, чтобы они не мешали друг другу в росте')
-        print('3. Удалите поврежденные листья и плоды, чтобы предотвратить распространение болезней')
- 
-bush = TomatoBush(5)
-gardener = Gardener('John', bush)
+def read_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            content = file.read().strip() 
+            if not content:
+                raise ValueError("Файл пустой")
+            print(content)
+    except ValueError as ve:
+        print(ve)
+    except FileNotFoundError:
+        print("Файл не найден.")
+read_file("file2.txt")
+read_file("file1.txt")
 ```
 
 ### Результат.
 ![](./pic/S2.png)
 
 ## Выводы
-1. На данном этапе мы создаём экземпляры классов, олицетворяющие собой помидорный куст и садовника.
+1. Данный код проверяет наличие файла, данных в нём и если они есть, то выводит их
 
 ## Самостоятельная работа №3
-### Используя объект класса Gardener, поухаживайте за кустом с помидорами
+### Напишите функцию, которая будет складывать 2 и введенное пользователем число, но если пользователь введет строку или другой неподходящий тип данных, то в консоль выведется ошибка “Неподходящий тип данных. Ожидалось число.”. Реализовать функционал программы необходимо через try/except и подобрать правильный тип исключения. Создавать собственное исключение нельзя. Проведите несколько тестов, в которых исключение вызывается и нет. Результатом выполнения задачи будет листинг кода и получившийся вывод в консоль
 
 ```python
-class Tomato:
-    
-    states = {'Отсутствует': 0, 'Цветение': 1, 'Зеленый': 2, 'Красный': 3}
-    
-    def __init__(self, index):
-        self._index = index
-        self._state = self.states['Отсутствует']
-        
-    def grow(self):
-        if self._state < 3:
-            self._state += 1
-        
-    def is_ripe(self):
-        return True if self._state == 3 else False
- 
-class TomatoBush:
-    
-    def __init__(self, num):
-        self.tomatoes = [Tomato(index) for index in range(1, num+1)]
-        
-    def grow_all(self):
-        for tomato in self.tomatoes:
-            tomato.grow()
-            
-    def all_are_ripe(self):
-        return all([tomato.is_ripe() for tomato in self.tomatoes])
-    
-    def give_away_all(self):
-        self.tomatoes = []
- 
-class Gardener:
-    
-    def __init__(self, name, plant):
-        self.name = name
-        self._plant = plant
-        
-    def work(self):
-        self._plant.grow_all()
-        
-    def harvest(self):
-        if self._plant.all_are_ripe():
-            print('Урожай собран!')
-            self._plant.give_away_all()
-        else:
-            print('Томаты еще не дозрели')
-            
-    @staticmethod
-    def knowledge_base():
-        print('Справка по садоводству:')
-        print('1. Не забывайте регулярно поливать и подкармливать растения')
-        print('2. Определите правильное расстояние между растениями, чтобы они не мешали друг другу в росте')
-        print('3. Удалите поврежденные листья и плоды, чтобы предотвратить распространение болезней')
- 
-bush = TomatoBush(5)
-gardener = Gardener('John', bush)
- 
-gardener.work()
-gardener.work()
-gardener.work()
+def func(value):
+    try:
+        numb = int(value)
+        return numb*numb 
+    except ValueError:
+        print("Неподходящий тип данных. Ожидалось число.")
+print(func("aaAAaa"))
+print(func(33))
 ```
 
 ### Результат.
 ![](./pic/S3.png)
 
 ## Выводы
-1. Метод ```work``` позволяет менять состояние помидор с менее зрелого, на более зрелое
+1. Данная функция при помощи исключения производит проверку типа вводимых данных
 
 ## Самостоятельная работа №4
-### Попробуйте собрать урожай, когда томаты еще не дозрели. Продолжайте ухаживать за ними
+### Создайте собственный декоратор, который будет использоваться для двух любых вами придуманных функций. Декораторы, которые использовались ранее в работе нельзя воссоздавать. Результатом выполнения задачи будет: класс декоратора, две как-то связанными с ним функциями, скриншот консоли с выполненной программой и подробные комментарии, которые будут описывать работу вашего кода
 
 ```python
-class Tomato:
-    
-    states = {'Отсутствует': 0, 'Цветение': 1, 'Зеленый': 2, 'Красный': 3}
-    
-    def __init__(self, index):
-        self._index = index
-        self._state = self.states['Отсутствует']
-        
-    def grow(self):
-        if self._state < 3:
-            self._state += 1
-        
-    def is_ripe(self):
-        return True if self._state == 3 else False
- 
-class TomatoBush:
-    
-    def __init__(self, num):
-        self.tomatoes = [Tomato(index) for index in range(1, num+1)]
-        
-    def grow_all(self):
-        for tomato in self.tomatoes:
-            tomato.grow()
-            
-    def all_are_ripe(self):
-        return all([tomato.is_ripe() for tomato in self.tomatoes])
-    
-    def give_away_all(self):
-        self.tomatoes = []
- 
-class Gardener:
-    
-    def __init__(self, name, plant):
-        self.name = name
-        self._plant = plant
-        
-    def work(self):
-        self._plant.grow_all()
-        
-    def harvest(self):
-        if self._plant.all_are_ripe():
-            print('Урожай собран!')
-            self._plant.give_away_all()
-        else:
-            print('Томаты еще не дозрели')
-            
-    @staticmethod
-    def knowledge_base():
-        print('Справка по садоводству:')
-        print('1. Не забывайте регулярно поливать и подкармливать растения')
-        print('2. Определите правильное расстояние между растениями, чтобы они не мешали друг другу в росте')
-        print('3. Удалите поврежденные листья и плоды, чтобы предотвратить распространение болезней')
- 
-bush = TomatoBush(5)
-gardener = Gardener('John', bush)
- 
-gardener.work()
+class Dec:
+    def __init__(self, func):
+        self.func = func
 
-gardener.harvest()
+    def __call__(self, *args, **kwargs):
+        print(f"Function {self.func.__name__} is working")
+        result = self.func(*args, **kwargs)
+        print(f"Function {self.func.__name__} stopped working")
+        return result
+@Dec
+def quadrat(a):
+    print(a*a)
+@Dec
+def count(b):
+    i=0
+    c=0
+    while (i<=b):
+        c=i+c
+        i=i+1
+    print(c)
+quadrat(3)
+count(5)
 ```
 
 ### Результат.
 ![](./pic/S4.png)
 
 ## Выводы
-1. При недостаточном уровне зрелости плодов программа не позволит собрать урожай
+1. Данный код демонстрирует применение декоратора и расширение возможностей функций за его счёт
 
 ## Самостоятельная работа №5
-### Соберите урожай
+### Создайте собственное исключение, которое будет использоваться в двух любых фрагментах кода. Исключения, которые использовались ранее в работе нельзя воссоздавать. Результатом выполнения задачи будет: класс исключения, код к котором в двух местах используется это исключение, скриншот консоли с выполненной программой и подробные комментарии, которые будут описывать работу вашего кода
 
 ```python
-class Tomato:
-    
-    states = {'Отсутствует': 0, 'Цветение': 1, 'Зеленый': 2, 'Красный': 3}
-    
-    def __init__(self, index):
-        self._index = index
-        self._state = self.states['Отсутствует']
-        
-    def grow(self):
-        if self._state < 3:
-            self._state += 1
-        
-    def is_ripe(self):
-        return True if self._state == 3 else False
- 
-class TomatoBush:
-    
-    def __init__(self, num):
-        self.tomatoes = [Tomato(index) for index in range(1, num+1)]
-        
-    def grow_all(self):
-        for tomato in self.tomatoes:
-            tomato.grow()
-            
-    def all_are_ripe(self):
-        return all([tomato.is_ripe() for tomato in self.tomatoes])
-    
-    def give_away_all(self):
-        self.tomatoes = []
- 
-class Gardener:
-    
-    def __init__(self, name, plant):
-        self.name = name
-        self._plant = plant
-        
-    def work(self):
-        self._plant.grow_all()
-        
-    def harvest(self):
-        if self._plant.all_are_ripe():
-            print('Урожай собран!')
-            self._plant.give_away_all()
-        else:
-            print('Томаты еще не дозрели')
-            
-    @staticmethod
-    def knowledge_base():
-        print('Справка по садоводству:')
-        print('1. Не забывайте регулярно поливать и подкармливать растения')
-        print('2. Определите правильное расстояние между растениями, чтобы они не мешали друг другу в росте')
-        print('3. Удалите поврежденные листья и плоды, чтобы предотвратить распространение болезней')
- 
-bush = TomatoBush(5)
-gardener = Gardener('John', bush)
- 
-gardener.work()
-gardener.work()
-gardener.work()
-
-gardener.harvest()
+class Error(Exception):
+    pass
+def check(value):
+    if value <= 0:
+        raise Error("Значение должно быть положительным!")
+def process(value):
+    try:
+        check(value)
+        print(f"Обработка значения: {value}")
+    except Error as e:
+        print(e)
+process(0)
+process(-5)
+process(10)
 ```
 
 ### Результат.
 ![](./pic/S5.png)
 
 ## Выводы
-1. Метод ```harvest``` позволяет собрать урожай
+1. Код иллюстрирует применение пользовательского исключения для валидации входных данных и управления ошибочными ситуациями
